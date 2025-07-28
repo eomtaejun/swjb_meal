@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="./common/js/jquery-3.7.1.min.js"></script>
+    <script src="./common/bootstrap-5.3.7-dist/js/bootstrap.js"></script>
+    <!-- <script src="https://cdn.tailwindcss.com"></script> -->
+    <script type="module" src="./common/js/script.js"></script>
+    <link rel="stylesheet" href="./common/bootstrap-5.3.7-dist/css/bootstrap.css">
+    <link rel="stylesheet" href="./common/css/style.css">
+</head>
+<body class="px-5 py-4 d-flex flex-column row-gap-4">
+    <header class="area px-5 py-3">
+        <div class="w-100 h-100 d-flex justify-content-between align-items-center">
+            <img src="./common/images/logo.png" alt="Suwon Information Science High School">
+
+            <p class="date mb-0 fx-2 text-secondary fw-semibold"></p>
+        </div>
+    </header>
+
+    <div class="row flex-1">
+        <div class="col-7 h-100">
+            <div class="w-100 h-100 d-flex flex-column justify-content-center align-items-center row-gap-4">
+                <div id="infoArea" class="area position-relative">
+                    <p class="mb-4 fx-5 fw-bold text-dark border-start border-primary border-4 pl-2">학생 정보</p>
+
+                    <div class="py-2">
+                        <p class="infoText mb-1 fx-5 fw-semibold">이름: 엄태준</p>
+                        <p class="infoText mb-1 fx-5 fw-semibold">학번: 20713</p>
+                        <p class="infoText mb-1 fx-5 fw-semibold">학과: IT소프트웨어</p>
+                    </div>
+                    
+                    <video id="video" class="d-block shadow-lg overflow-hidden rounded-3 position-absolute"></video>
+                </div>
+
+                <div id="inputArea" class="area">
+                    <p class="mb-4 fx-5 fw-bold text-dark border-start border-primary border-4 pl-2">학번 입력</p>
+
+                    <form id="studentForm" class="w-100 h-100">
+                        <div class="input-group mb-0">
+                            <input type="text" id="studentId" class="form-control border-2" placeholder="학번을 입력하세요" aria-label="학번을 입력하세요" aria-describedby="button-addon2">
+                            <button class="btn btn-outline-secondary" type="button" id="button-addon2">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-5 h-100">
+            <div class="w-100 h-100 d-flex flex-column justify-content-between align-items-center row-gap-4">
+                <div id="mealArea" class="area">
+                    <div class="w-100 h-100 d-flex justify-content-center align-items-center">
+                        <div>
+                            <p class="mb-4 fx-5 fw-bold text-dark border-start border-primary border-4 pl-2">오늘의 급식</p>
+                            
+                            <table class="lunchMenu table mb-0">
+                                <thead>
+                                    <tr class="table-primary">
+                                        <th scope="col" class="fx-2 fw-bold text-center">date</th>
+                                        <th scope="col" class="fx-2 fw-bold text-center">date</th>
+                                        <th scope="col" class="fx-2 fw-bold text-center">date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="fx-1 text-center lh-base">(없음)</td>
+                                        <td class="fx-1 text-center lh-base">(없음)</td>
+                                        <td class="fx-1 text-center lh-base">(없음)</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="orderArea" class="area">
+                    <div class="w-100 h-100 d-flex justify-content-center align-items-center">
+                        <div class="row w-100 h-fit">
+                            <div class="col-6">
+                                <p class="mb-4 fx-4 fw-bold text-dark border-start border-primary border-4 pl-2">학년별 입장 시간</p>
+            
+                                <table class="orderTime table table-striped mb-0">
+                                    <thead>
+                                        <tr class="table-primary">
+                                            <th scope="col" class="fx-1 fw-bold text-center">학년</th>
+                                            <th scope="col" class="fx-1 fw-bold text-center">입장 시간</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="fx-n2 text-center lh-base">3학년</td>
+                                            <td class="fx-n2 text-center lh-base">13:00</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fx-n2 text-center lh-base">2학년</td>
+                                            <td class="fx-n2 text-center lh-base">13:06</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fx-n2 text-center lh-base">1학년</td>
+                                            <td class="fx-n2 text-center lh-base">13:10</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+    
+                            <div class="col-6">
+                                <p class="mb-4 fx-4 fw-bold text-dark border-start border-primary border-4 pl-2">월별 입장 순서</p>
+    
+                                <div class="orderMonth">
+                                    <div class="thead d-flex justify-content-center align-items-center">
+                                        <div class="p-2 flex-1 fx-1 fw-bold text-center">#</div>
+                                        <div class="p-2 flex-1 fx-1 fw-bold text-center">0월</div>
+                                        <div class="p-2 flex-1 fx-1 fw-bold text-center">0월</div>
+                                        <div class="p-2 flex-1 fx-1 fw-bold text-center">0월</div>
+                                    </div>
+    
+                                    <div class="tbody d-flex justify-content-center align-items-center">
+                                        <div class="d-flex flex-column flex-1">
+                                            <div class="p-2 flex-1 fx-n2 text-center fw-semibold">1순위</div>
+                                            <div class="p-2 flex-1 fx-n2 text-center fw-semibold">2순위</div>
+                                            <div class="p-2 flex-1 fx-n2 text-center fw-semibold">3순위</div>
+                                            <div class="p-2 flex-1 fx-n2 text-center fw-semibold">4순위</div>
+                                        </div>
+                                        <div class="d-flex flex-column flex-1">
+                                            <div class="p-2 flex-1 fx-n2 text-center">전자</div>
+                                            <div class="p-2 flex-1 fx-n2 text-center">자동화</div>
+                                            <div class="p-2 flex-1 fx-n2 text-center">디자인</div>
+                                            <div class="p-2 flex-1 fx-n2 text-center">소프트</div>
+                                        </div>
+                                        <div class="d-flex flex-column flex-1">
+                                            <div class="p-2 flex-1 fx-n2 text-center">자동화</div>
+                                            <div class="p-2 flex-1 fx-n2 text-center">디자인</div>
+                                            <div class="p-2 flex-1 fx-n2 text-center">소프트</div>
+                                            <div class="p-2 flex-1 fx-n2 text-center">전자</div>
+                                        </div>
+                                        <div class="d-flex flex-column flex-1">
+                                            <div class="p-2 flex-1 fx-n2 text-center">디자인</div>
+                                            <div class="p-2 flex-1 fx-n2 text-center">소프트</div>
+                                            <div class="p-2 flex-1 fx-n2 text-center">전자</div>
+                                            <div class="p-2 flex-1 fx-n2 text-center">자동화</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import {QRcode, Input, Meal, DateUtils} from './common/js/script.js';
+        var input=new Input();
+        var qrcode=new QRcode();
+        var meal=new Meal();
+        var dateutils=new DateUtils();
+    </script>
+</body>
+</html>
