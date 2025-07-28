@@ -87,7 +87,9 @@ input, textarea, select, button{outline: none !important; border: none; font-siz
 
 body{
     height: 100vh;
-    background: linear-gradient(to bottom right, #ece9e6, #ffffff);
+    /* background: linear-gradient(to bottom right, #ece9e6, #ffffff); */
+    background: linear-gradient(135deg, #f9f1ff, #e0f7fa);
+    /* background: linear-gradient(to right, #f9f9f9, #e0f7fa); */
 }
 
 .area{

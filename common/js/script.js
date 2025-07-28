@@ -24,107 +24,21 @@ class Util{
 
 export class QRcode{
     constructor(){
+        /**
+         * qr code
+         */
         this.QRdata=null;
-        this.QRobj=null;
+        // this.QRobj=null;
 
         this.codeReader=new BrowserQRCodeReader();
         this.videoElement=document.querySelector("#video");
 
-        this.reader();
-        this.load();
-    }
-
-    reader(){
-        this.codeReader.decodeFromVideoDevice(null, this.videoElement, (result, error, controls) => {
-            if (result) {
-                if(this.QRdata) return;
-                
-                // #region split string
-                // this.QRdata=result.getText().split("@");
-                // this.QRobj={
-                //     grade: this.QRdata[0],
-                //     class: this.QRdata[1],
-                //     number: this.QRdata[2],
-                //     name: this.QRdata[3]
-                // }
-                // console.log(this.QRobj)
-                // #endregion
-                    
-                // #region json decode
-                this.QRdata=result.getText();
-                this.QRobj=JSON.parse(this.QRdata);
-                console.log(this.QRobj)
-
-                this.load();
-
-                setTimeout(()=>{
-                    this.QRdata=null;
-                    this.QRobj=null;
-
-                    this.unload();
-                }, 1500);
-                // #endregion
-
-                // controls.stop(); // 인식 후 종료
-            }
-            // if (error) {
-            //     // 인식 실패 에러
-            //     console.warn(error);
-            // }
-        });
-    }
-
-    load(){
-        // validation init
-        $($(".infoText")[0]).text("이름: ");
-        $($(".infoText")[1]).text("학번: ");
-        $($(".infoText")[2]).text("학과: ");
-        $(".area").css("box-shadow", "0 0.5rem 1rem rgba(0, 0, 0, 0.15)");
-        if(!this.QRobj) return;
-
-        // shadow
-        const gradeColorMap = {
-            "1": "rgba(255, 94, 87, 0.4)",
-            "2": "rgba(255, 179, 71, 0.5)",
-            "3": "rgba(79, 195, 247, 0.5)"
-        };
-        const shadowColor = gradeColorMap[this.QRobj.grade];
-        if (shadowColor) $(".area").css("box-shadow", `0 0 1.5rem 1rem ${shadowColor}`);
-
-        // text
-        $($(".infoText")[0]).text(`이름: ${this.QRobj.name}`);
-        $($(".infoText")[1]).text(`학번: ${this.QRobj.grade}${this.QRobj.class.padStart(2, '0')}${this.QRobj.number}`);
-
-        let major=null;
-        switch(Number(this.QRobj.class)){
-            case 1:
-            case 2:
-                major="AI융합전자과"; break;
-            case 3:
-            case 4:
-                major="스마트자동화과"; break;
-            case 5:
-            case 6:
-                major="디자인콘텐츠과"; break;
-            case 7:
-            case 8:
-                major="IT소프트웨어과"; break;
-        }
-        $($(".infoText")[2]).text(`학과: ${major}`);
-    }
-
-    unload(){
-        $($(".infoText")[0]).text("이름: ");
-        $($(".infoText")[1]).text("학번: ");
-        $($(".infoText")[2]).text("학과: ");
-        $(".area").css("box-shadow", "0 0.5rem 1rem rgba(0, 0, 0, 0.15)");
-    }
-}
-
-export class Input{
-    constructor(){
+        /**
+         * input
+         */
         this.student=null;
         this.students=[];
+        this.key="1HAfJWCaenNya5hio_AqxuHKNDQGgJvDPy2q8SzXUn1s";
         this.gids=[
             0,
             420882028,
@@ -152,12 +66,45 @@ export class Input{
             340090994
         ];
 
+        this.reader();
         this.init();
+    }
+
+    reader(){
+        this.codeReader.decodeFromVideoDevice(null, this.videoElement, (result, error, controls) => {
+            if (result) {
+                if(this.QRdata) return;
+                
+                // #region split string
+                // this.QRdata=result.getText().split("@");
+                // this.QRobj={
+                //     grade: this.QRdata[0],
+                //     class: this.QRdata[1],
+                //     number: this.QRdata[2],
+                //     name: this.QRdata[3]
+                // }
+                // console.log(this.QRobj)
+                // #endregion
+                    
+                // #region json decode
+                this.QRdata=result.getText();
+                this.student=JSON.parse(this.QRdata);
+
+                this.load();
+                // #endregion
+
+                // controls.stop(); // 인식 후 종료
+            }
+            // if (error) {
+            //     // 인식 실패 에러
+            //     console.warn(error);
+            // }
+        });
     }
 
     async init(){
         this.students=await Promise.all(
-            this.gids.map((gid)=>fetch(`https://docs.google.com/spreadsheets/d/1HAfJWCaenNya5hio_AqxuHKNDQGgJvDPy2q8SzXUn1s/export?format=csv&gid=${gid}`).then(res=>res.text()))
+            this.gids.map((gid)=>fetch(`https://docs.google.com/spreadsheets/d/${this.key}/export?format=csv&gid=${gid}`).then(res=>res.text()))
         );
 
         this.students=this.students.reduce((acc, sheet)=>{
@@ -178,20 +125,73 @@ export class Input{
             return [...acc, ...data];
         }, []);
 
-        console.log(this.students);
-
-        this.load();
+        // this.load(); // 잇어도 오류x
         this.event();
     }
 
+    load(){
+        // validation init
+        $($(".infoText")[0]).text("이름: ");
+        $($(".infoText")[1]).text("학번: ");
+        $($(".infoText")[2]).text("학과: ");
+        $(".area").css("box-shadow", "0 0.5rem 1rem rgba(0, 0, 0, 0.15)");
+        document.querySelector("#studentForm input").value=""; // input
+        if(!this.student) return; // invalid value
+        if(!this.students.find(value=>`${value.grade}${value.class.padStart(2, '0')}${value.number}`===`${this.student.grade}${this.student.class.padStart(2, '0')}${this.student.number}`)) return; // value not included in students
+
+        // shadow
+        const gradeColorMap={
+            "1": "rgba(255, 94, 87, 0.4)",
+            "2": "rgba(255, 179, 71, 0.5)",
+            "3": "rgba(79, 195, 247, 0.5)"
+        };
+        const shadowColor=gradeColorMap[this.student.grade];
+        if (shadowColor) $(".area").css("box-shadow", `0 0 1.5rem 1rem ${shadowColor}`);
+
+        // text
+        $($(".infoText")[0]).text(`이름: ${this.student.name}`);
+        $($(".infoText")[1]).text(`학번: ${this.student.grade}${this.student.class.padStart(2, '0')}${this.student.number}`);
+
+        let major=null;
+        switch(Number(this.student.class)){
+            case 1:
+            case 2:
+                major="AI융합전자과"; break;
+            case 3:
+            case 4:
+                major="스마트자동화과"; break;
+            case 5:
+            case 6:
+                major="디자인콘텐츠과"; break;
+            case 7:
+            case 8:
+                major="IT소프트웨어과"; break;
+        }
+        $($(".infoText")[2]).text(`학과: ${major}`);
+
+        setTimeout(()=>{
+            this.QRdata=null;
+            this.student=null;
+            this.unload();
+        }, 1500);
+    }
+
+    unload(){
+        $($(".infoText")[0]).text("이름: ");
+        $($(".infoText")[1]).text("학번: ");
+        $($(".infoText")[2]).text("학과: ");
+        $(".area").css("box-shadow", "0 0.5rem 1rem rgba(0, 0, 0, 0.15)");
+    }
+
     event(){
+        // validation
         $("#studentForm input").on("input", e=>{
-            e.target.value=e.target.value.trim().replaceAll(/[^\d]/g, "");
-            $("#studentForm input").removeClass("border border-danger");
-            if(e.target.value.length>5) e.target.value=e.target.value.slice(0, 5);
+            e.target.value=e.target.value.trim().replaceAll(/[^\d]/g, ""); // only number
+            if(e.target.value.length>5) e.target.value=e.target.value.slice(0, 5); // length 5 or less
+            $("#studentForm input").removeClass("border border-danger"); // error border reset
         })
 
-        document.querySelector("#studentForm").addEventListener("submit", e=>{
+        $("#studentForm").on("submit", e=>{
             e.preventDefault();
             if(this.student) return;
             e.target.value="";
@@ -199,18 +199,14 @@ export class Input{
             const studentNumber=document.querySelector("#studentForm input").value;
 
             this.student=this.students.find(value=>`${value.grade}${value.class.padStart(2, '0')}${value.number}`===studentNumber);
-            console.log(this.student)
 
             if(this.student) this.load();
             else $("#studentForm input").addClass("border border-danger");
-
-            setTimeout(()=>{
-                this.student=null;
-                this.unload();
-            }, 1500)
         })
     }
+}
 
+export class Input{
     load(){
         // validation init
         $($(".infoText")[0]).text("이름: ");
@@ -250,13 +246,6 @@ export class Input{
         }
         $($(".infoText")[2]).text(`학과: ${major}`);
     }
-
-    unload(){
-        $($(".infoText")[0]).text("이름: ");
-        $($(".infoText")[1]).text("학번: ");
-        $($(".infoText")[2]).text("학과: ");
-        $(".area").css("box-shadow", "0 0.5rem 1rem rgba(0, 0, 0, 0.15)");
-    }
 }
 
 export class Meal{
@@ -271,7 +260,7 @@ export class Meal{
 
     async init(){
         // get current week
-        this.currentDate=new Date("2025-07-31");
+        this.currentDate=new Date();
         this.startDate=new Date(this.currentDate);
         this.startDate.setDate(this.currentDate.getDay()===1 ? this.currentDate.getDate()-3 : this.currentDate.getDate()-1);
         this.endDate=new Date(this.currentDate);
@@ -289,8 +278,6 @@ export class Meal{
             content: this.meal.find(item=>item.MLSV_YMD===value)
         }))
         
-        console.log(this.meal);
-
         this.load();
     }
     
@@ -314,7 +301,6 @@ export class Meal{
     empty(){
         let days=['월요일', '화요일', '수요일', '목요일', '금요일'];
         let dates=[this.ISOString(this.startDate), this.ISOString(this.currentDate), this.ISOString(this.endDate)];
-        console.log(dates)
         
         $(".lunchMenu thead tr").html(
             dates.map(value=>`
@@ -339,7 +325,7 @@ export class DateUtils{
 
     init(){
         // dates (thead)
-        this.currentDate=new Date("2025-07-31");
+        this.currentDate=new Date();
         this.dates=[this.currentDate.getMonth(), this.currentDate.getMonth()+1, this.currentDate.getMonth()+2];
 
         // majors (tbody)
