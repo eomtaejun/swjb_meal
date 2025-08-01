@@ -24,82 +24,102 @@ class Util{
 
 export class QRcode{
     constructor(){
-        /**
-         * qr code
-         */
-        this.QRdata=null;
-        // this.QRobj=null;
-
         this.codeReader=new BrowserQRCodeReader();
         this.videoElement=document.querySelector("#video");
 
-        /**
-         * input
-         */
-        this.student=null;
+        this.devices=null;
+        this.controls=null;
+ 
         this.students=[];
-        this.key="1HAfJWCaenNya5hio_AqxuHKNDQGgJvDPy2q8SzXUn1s";
+        this.student=null;
+
+        this.key="1D0uBz9EtXE0oRVAJwzqLqydJ9SilufUm5VaTFlNeurY";
         this.gids=[
             0,
-            420882028,
-            1476063395,
-            1972379934,
-            633847506,
-            419659145,
-            991516872,
-            663823589,
-            971892339,
-            270072902,
-            534502800,
-            1245418035,
-            1632286854,
-            742757925,
-            1902254510,
-            780529177,
-            791243012,
-            1369022158,
-            7316150,
-            1028168809,
-            1988054717,
-            478812933,
-            288004330,
-            340090994
+            2035791670,
+            2082050942,
+            1804786292,
+            255651288,
+            2074170014,
+            1090760841,
+            628116914,
+            422824113,
+            1584095104,
+            1119392229,
+            1682229772,
+            612664774,
+            1492243996,
+            1467657593,
+            1747357856,
+            309441355,
+            675103511,
+            367313064,
+            888019649,
+            1595996718,
+            1562465177,
+            944095892,
+            2031534596
         ];
 
         this.reader();
         this.init();
+        this.event();
     }
 
-    reader(){
-        this.codeReader.decodeFromVideoDevice(null, this.videoElement, (result, error, controls) => {
+    async reader(){
+        this.devices=await BrowserQRCodeReader.listVideoInputDevices();
+        if(!this.devices.length) return this.error();
+
+        const common=this.devices.find(device=>device.label==="JOYTRON HD20 (145f:02aa)");
+        this.cam=common ? common.deviceId : null;
+
+        this.select();
+        this.decoding();
+        this.set();
+    }
+
+    select(){
+        const selectElement=document.querySelector("#selectDevice select");
+        const selectedDeviceId=this.cam;
+
+        $(selectElement).html(
+            this.devices.map(device =>
+                `<option value="${device.deviceId}" ${device.deviceId===selectedDeviceId ? 'selected' : ''}>${device.label}</option>`
+            )
+        )
+
+        $(selectElement).off("change").on("change", e=>{
+            this.cam=e.target.value;
+            this.decoding();
+        });
+    }
+
+    decoding(){
+        if(this.controls) this.controls.stop();
+
+        const deviceId=this.cam;
+        
+        this.codeReader.decodeFromVideoDevice(deviceId, this.videoElement, (result, error, controls) => {
+            this.controls=controls;
             if (result) {
-                if(this.QRdata) return;
-                
-                // #region split string
-                // this.QRdata=result.getText().split("@");
-                // this.QRobj={
-                //     grade: this.QRdata[0],
-                //     class: this.QRdata[1],
-                //     number: this.QRdata[2],
-                //     name: this.QRdata[3]
-                // }
-                // console.log(this.QRobj)
-                // #endregion
-                    
-                // #region json decode
-                this.QRdata=result.getText();
-                this.student=JSON.parse(this.QRdata);
+                if(this.student) return;
+
+                this.student=JSON.parse(result.getText());
 
                 this.load();
-                // #endregion
-
-                // controls.stop(); // 인식 후 종료
             }
-            // if (error) {
-            //     // 인식 실패 에러
-            //     console.warn(error);
-            // }
         });
+    }
+
+    set(){
+        $("#selectDevice button").on("click", e=>$("#selectDevice").addClass("d-none"));
+
+        $(document).on("keydown", e=>{
+            if(e.ctrlKey && e.key==='q'){
+                e.preventDefault();
+                $("#selectDevice").toggleClass("d-none");
+            }
+        })
     }
 
     async init(){
@@ -124,20 +144,28 @@ export class QRcode{
 
             return [...acc, ...data];
         }, []);
-
-        // this.load(); // 잇어도 오류x
-        this.event();
     }
 
     load(){
-        // validation init
+        setTimeout(()=>this.unload(), 1500);
+
+        // values reset
         $($(".infoText")[0]).text("이름: ");
         $($(".infoText")[1]).text("학번: ");
         $($(".infoText")[2]).text("학과: ");
         $(".area").css("box-shadow", "0 0.5rem 1rem rgba(0, 0, 0, 0.15)");
-        document.querySelector("#studentForm input").value=""; // input
+        document.querySelector("#studentForm input").value="";
         if(!this.student) return; // invalid value
-        if(!this.students.find(value=>`${value.grade}${value.class.padStart(2, '0')}${value.number}`===`${this.student.grade}${this.student.class.padStart(2, '0')}${this.student.number}`)) return; // value not included in students
+        // value not included in students
+        if(!this.students.find(value=>`${value.grade}${value.class.padStart(2, '0')}${value.number.padStart(2, '0')}`===`${this.student.grade}${this.student.class.padStart(2, '0')}${this.student.number.padStart(2, '0')}`)){
+            $(this.videoElement).css("border", "2px solid #f00");
+            $(this.videoElement).css("box-shadow", "0 0 12px 4px rgba(255, 0, 0, 0.75)");
+            setTimeout(()=>{
+                $(this.videoElement).css("border", "none");
+                $(this.videoElement).css("box-shadow", "0 1rem 3rem rgba(0, 0, 0, 0.175)");
+            }, 1000)
+            return;
+        }
 
         // shadow
         const gradeColorMap={
@@ -150,7 +178,7 @@ export class QRcode{
 
         // text
         $($(".infoText")[0]).text(`이름: ${this.student.name}`);
-        $($(".infoText")[1]).text(`학번: ${this.student.grade}${this.student.class.padStart(2, '0')}${this.student.number}`);
+        $($(".infoText")[1]).text(`학번: ${this.student.grade}${this.student.class.padStart(2, '0')}${this.student.number.padStart(2, '0')}`);
 
         let major=null;
         switch(Number(this.student.class)){
@@ -168,18 +196,11 @@ export class QRcode{
                 major="IT소프트웨어과"; break;
         }
         $($(".infoText")[2]).text(`학과: ${major}`);
-
-        setTimeout(()=>{
-            this.QRdata=null;
-            this.student=null;
-            this.unload();
-        }, 1500);
     }
-
+    
     unload(){
-        $($(".infoText")[0]).text("이름: ");
-        $($(".infoText")[1]).text("학번: ");
-        $($(".infoText")[2]).text("학과: ");
+        this.QRdata=null;
+        this.student=null;
         $(".area").css("box-shadow", "0 0.5rem 1rem rgba(0, 0, 0, 0.15)");
     }
 
@@ -188,20 +209,34 @@ export class QRcode{
         $("#studentForm input").on("input", e=>{
             e.target.value=e.target.value.trim().replaceAll(/[^\d]/g, ""); // only number
             if(e.target.value.length>5) e.target.value=e.target.value.slice(0, 5); // length 5 or less
-            $("#studentForm input").removeClass("border border-danger"); // error border reset
+            $("#studentForm input").removeClass("border-danger"); // error border reset
         })
 
         $("#studentForm").on("submit", e=>{
             e.preventDefault();
             if(this.student) return;
-            e.target.value="";
 
             const studentNumber=document.querySelector("#studentForm input").value;
 
-            this.student=this.students.find(value=>`${value.grade}${value.class.padStart(2, '0')}${value.number}`===studentNumber);
+            this.student=this.students.find(value=>`${value.grade}${value.class.padStart(2, '0')}${value.number.padStart(2, '0')}`===studentNumber);
 
             if(this.student) this.load();
-            else $("#studentForm input").addClass("border border-danger");
+            else{
+                $("#studentForm .input-wrap").addClass("border border-danger border-2");
+                setTimeout(()=>{
+                    $("#studentForm .input-wrap").removeClass("border border-danger border-2")
+                }, 1000)
+            }
+        })
+    }
+
+    error(){
+        $("#alert").addClass("d-block");
+        $("#alert").removeClass("d-none");
+        
+        $("#alert button").on("click", e=>{
+            $("#alert").addClass("d-none");
+            $("#alert").removeClass("d-block");
         })
     }
 }
@@ -217,17 +252,17 @@ export class Input{
         if(!this.student) return;
 
         // shadow
-        const gradeColorMap = {
+        const gradeColorMap={
             "1": "rgba(255, 94, 87, 0.4)",
             "2": "rgba(255, 179, 71, 0.5)",
             "3": "rgba(79, 195, 247, 0.5)"
         };
-        const shadowColor = gradeColorMap[this.student.grade];
+        const shadowColor=gradeColorMap[this.student.grade];
         if (shadowColor) $(".area").css("box-shadow", `0 0 1.5rem 1rem ${shadowColor}`);
 
         // text
         $($(".infoText")[0]).text(`이름: ${this.student.name}`);
-        $($(".infoText")[1]).text(`학번: ${this.student.grade}${this.student.class.padStart(2, '0')}${this.student.number}`);
+        $($(".infoText")[1]).text(`학번: ${this.student.grade}${this.student.class.padStart(2, '0')}${this.student.number.padStart(2, '0')}`);
 
         let major=null;
         switch(Number(this.student.class)){
@@ -255,6 +290,8 @@ export class Meal{
         this.currentDate=null;
         this.endDate=null;
 
+        this.key="22425efd9eb84d97a51875483539b6ce";
+
         this.init();
     }
 
@@ -267,7 +304,7 @@ export class Meal{
         this.endDate.setDate(this.currentDate.getDay()===5 ? this.currentDate.getDate()+3 : this.currentDate.getDate()+1);
 
         // 급식표 api
-        this.meal=await Util.post("GET", `https://open.neis.go.kr/hub/mealServiceDietInfo?KEY=71038ba943b743dba2ec541f58c0fdd6&ATPT_OFCDC_SC_CODE=J10&SD_SCHUL_CODE=7530899&MLSV_FROM_YMD=${this.ISOString(this.startDate)}&MLSV_TO_YMD=${this.ISOString(this.endDate)}&Type=json`);
+        this.meal=await Util.post("GET", `https://open.neis.go.kr/hub/mealServiceDietInfo?KEY=${this.key}&ATPT_OFCDC_SC_CODE=J10&SD_SCHUL_CODE=7530899&MLSV_FROM_YMD=${this.ISOString(this.startDate)}&MLSV_TO_YMD=${this.ISOString(this.endDate)}&Type=json`);
         if(this.meal.RESULT) return this.empty();
         
         this.meal=this.meal.mealServiceDietInfo[1].row;
@@ -286,16 +323,21 @@ export class Meal{
         
         $(".lunchMenu thead tr").html(
             this.meal.map(value=>`
-                <th scope="col" class="fx-2 fw-bold text-center">${days[new Date(value.date.slice(0, 4), (value.date.slice(4, 6))-1, value.date.slice(6, 8)).getDay()-1]} <span class="fx-n1 text-secondary">(${parseInt(value.date.slice(4, 6))}.${parseInt(value.date.slice(6, 8))})</span></th>
+                <th scope="col" class="fx-2 fw-semibold text-center">${days[new Date(value.date.slice(0, 4), (value.date.slice(4, 6))-1, value.date.slice(6, 8)).getDay()-1]} <span class="fx-n1 text-secondary">(${parseInt(value.date.slice(4, 6))}.${parseInt(value.date.slice(6, 8))})</span></th>
             `)
         )
 
         $(".lunchMenu tbody tr").html(
             this.meal.map(value=>{
-                if(value.content) return `<td class="fx-n1 text-center lh-base">${value.content.DDISH_NM}</td>`;
-                else return `<td class="fx-1 text-center lh-base">(없음)</td>`;
+                if(value.content) return `<td class="fx-1 text-center lh-base overflow-hidden">${value.content.DDISH_NM.split("<br/>").map(value=>`
+            <p class="mb-1 fx-1 text-center">${value.trim()}</p>
+        `).join("")}</td>`;
+                else return `<td class="fx-1 text-center lh-base overflow-hidden nowrap">(없음)</td>`;
             })
         )
+        // console.log(this.meal[1].content.DDISH_NM.split("<br/>").map(value=>`
+        //     <td class="fx-1 text-center lh-base overflow-hidden nowrap">${value.trim()}</td>
+        // `).join(""))
     }
 
     empty(){
@@ -304,7 +346,7 @@ export class Meal{
         
         $(".lunchMenu thead tr").html(
             dates.map(value=>`
-                <th scope="col" class="fx-1 fw-bold text-center">${days[new Date(value.slice(0, 4), (value.slice(4, 6))-1, value.slice(6, 8)).getDay()-1]} <span class="fx-n2 text-secondary">(${parseInt(value.slice(4, 6))}.${parseInt(value.slice(6, 8))})</span></th>
+                <th scope="col" class="fx-1 fw-semibold text-center">${days[new Date(value.slice(0, 4), (value.slice(4, 6))-1, value.slice(6, 8)).getDay()-1]} <span class="fx-n2 text-secondary">(${parseInt(value.slice(4, 6))}.${parseInt(value.slice(6, 8))})</span></th>
             `)
         )
     }
@@ -335,7 +377,7 @@ export class DateUtils{
             this.major.push(this.major.shift());
         }
 
-        this.order = [
+        this.order=[
             [this.major[this.major.length - 1], ...this.major.slice(0, -1)],
             [...this.major],
             [...this.major.slice(1), this.major[0]]
@@ -355,15 +397,15 @@ export class DateUtils{
         ])
         $(".orderMonth .tbody").html([
             `<div class="d-flex flex-column flex-1">
-                <div class="p-2 flex-1 fx-n2 text-center fw-semibold">1순위</div>
-                <div class="p-2 flex-1 fx-n2 text-center fw-semibold">2순위</div>
-                <div class="p-2 flex-1 fx-n2 text-center fw-semibold">3순위</div>
-                <div class="p-2 flex-1 fx-n2 text-center fw-semibold">4순위</div>
+                <div class="p-2 flex-1 fx-n2 text-center fw-semibold nowrap">1.</div>
+                <div class="p-2 flex-1 fx-n2 text-center fw-semibold nowrap">2.</div>
+                <div class="p-2 flex-1 fx-n2 text-center fw-semibold nowrap">3.</div>
+                <div class="p-2 flex-1 fx-n2 text-center fw-semibold nowrap">4.</div>
             </div>`,
             ...this.order.map(value=>`
                 <div class="d-flex flex-column flex-1">
                     ${value.map(item=>`
-                        <div class="p-2 flex-1 fx-n2 text-center">${item}</div>
+                        <div class="p-2 flex-1 fx-n2 text-center nowrap">${item}</div>
                     `).join("")}
                 </div>
             `)

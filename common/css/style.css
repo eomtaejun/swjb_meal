@@ -1,6 +1,7 @@
 @charset "UTF-8";
 
-*{margin: 0; padding: 0; box-sizing: border-box; font-size: 1rem; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
+/* #region reset */
+*{margin: 0; padding: 0; box-sizing: border-box; font-size: 1rem; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; user-select: none;}
 a{text-decoration: none !important; display: block; color: #000;}
 a, button, label{cursor: pointer; user-select: none;}
 input, textarea, select, button{outline: none !important; border: none; font-size: 0.9rem;}
@@ -77,19 +78,18 @@ input, textarea, select, button{outline: none !important; border: none; font-siz
 .fx-n4{font-size: 0.8rem !important;}
 
 .font-bold{font-weight: bold;}
-.item-center{position: absolute; left: 50%; transform: translateX(-50%);}
-.filter{filter: brightness(40%);}
 .fit-cover{object-fit: cover; width: 100%; height: 100%;}
 .nowrap{white-space: nowrap;}
-.tran{transition: all 0.35s ease;}
+.tran{transition: all .35s ease;}
 .flex-1{flex: 1;}
+.w-fit{width: fit-content;}
 .h-fit{height: fit-content;}
+/* #endregion reset */
 
+/* #region section utility classes */
 body{
     height: 100vh;
-    /* background: linear-gradient(to bottom right, #ece9e6, #ffffff); */
     background: linear-gradient(135deg, #f9f1ff, #e0f7fa);
-    /* background: linear-gradient(to right, #f9f9f9, #e0f7fa); */
 }
 
 .area{
@@ -101,46 +101,91 @@ body{
     transition: all .35s ease;
 }
 
-#infoArea{flex: 1;}
-#inputArea{height: fit-content;}
-#mealArea{flex: 1;}
-#orderArea{height: fit-content;}
+.title{
+    padding-left: 0.5rem;
+    margin-bottom: 1.5rem;
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #212529;
+    border-left: 4px solid #0d6efd;
+}
+/* #endregion section utility classes */
 
+/* #region information area */
 #video{
+    width: 50%;
+    min-width: 300px;
+    max-width: 410px;
     object-fit: cover;
     aspect-ratio: 1 / 1;
-    height: calc(100% - 6rem);
     right: 3rem;
     top: 50%;
     transform: translateY(-50%);
+    box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175);
 }
+/* #endregion information area */
 
+/* #region student id input area */
+#studentForm .input-wrap{
+    box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.1),
+                inset -3px -3px 6px rgba(200, 200, 200, 0.12);
+    height: 3.5rem;
+}
+#studentForm .input-wrap::after{
+    content: "";
+    position: absolute;
+    z-index: 1;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 2.5px;
+    width: 0;
+    border-radius: 1.5px;
+    background-color: #0d6efd;
+    mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
+    transition: all .35s ease;
+}
+#studentForm .input-wrap:focus-within::after{width: 100%;}
+
+#studentForm input{height: 100%;}
+
+#studentForm button{
+    aspect-ratio: 1 / 1;
+    padding: 0.75rem;
+}
+/* #endregion student id input area */
+
+/* #region table utility classes */
 .lunchMenu th+th,
-.orderTime th+th{border-left: 1px solid #a6b5cc;}
+.orderGrade th+th{border-left: 1px solid #a6b5cc;}
 .lunchMenu td+td,
-.orderTime td+td{border-left: 1px solid #dee2e6;}
+.orderGrade td+td{border-left: 1px solid #dee2e6;}
 
 .orderMonth,
 .lunchMenu{table-layout: fixed;}
 
-.lunchMenu thead tr th:first-child,
-.lunchMenu tbody tr td:first-child{
-    mask-image: linear-gradient(to left, black, transparent);
-}
-.lunchMenu thead tr th:last-child,
-.lunchMenu tbody tr td:last-child{
-    mask-image: linear-gradient(to right, black, transparent);
-}
+.lunchMenu .thead,
+.lunchMenu .tbody{flex-shrink: 0;}
 
+.lunchMenu thead tr th:first-child,
+.lunchMenu tbody tr td:first-child{mask-image: linear-gradient(to left, #000, transparent);}
+.lunchMenu thead tr th:last-child,
+.lunchMenu tbody tr td:last-child{mask-image: linear-gradient(to right, #000, transparent);}
+
+.lunchMenu thead th:nth-child(2),
+.lunchMenu tbody td:nth-child(2){width: 45%;}
+
+.lunchMenu tbody tr td p:nth-of-type(even){color: #4f4f4f;}
+/* #endregion table utility classes */
+
+/* #region by month order table */
 .orderMonth .thead{
     background-color: #cfe2ff;
     border-bottom: 1px solid #a6b5cc;;
 }
 .orderMonth .thead div+div{border-left: 1px solid #a6b5cc;}
 
-.orderMonth .tbody>div:nth-of-type(even){
-    background-color: rgba(0, 0, 0, 0.05);
-}
+.orderMonth .tbody>div:nth-of-type(even){background-color: rgba(0, 0, 0, 0.05);}
 .orderMonth .tbody>div>div{border-bottom: 1px solid #dee2e6;}
 .orderMonth .tbody>div+div{border-left: 1px solid #dee2e6;}
 
@@ -148,3 +193,19 @@ body{
 .orderMonth .thead>div:nth-of-type(4),
 .orderMonth .tbody>div:nth-of-type(2),
 .orderMonth .tbody>div:nth-of-type(4){opacity: 0.7;}
+/* #endregion by month order table */
+
+/* #region can not found camera message */
+#alert{z-index: 9999;}
+
+#alert p{
+    color: #222;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+/* #endregion can not found camera message */
+
+/* #region select cam */
+#selectDevice{
+    z-index: 999;
+}
+/* #endregion select cam */
