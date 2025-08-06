@@ -112,7 +112,7 @@ body{
 /* #endregion section utility classes */
 
 /* #region information area */
-#video{
+/* #video{
     width: 50%;
     min-width: 300px;
     max-width: 410px;
@@ -122,11 +122,74 @@ body{
     top: 50%;
     transform: translateY(-50%);
     box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175);
+} */
+#video{
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
 }
 /* #endregion information area */
 
 /* #region student id input area */
-#studentForm .input-wrap{
+.item{
+    width: calc((100% / 3) - (2rem / 3));
+    aspect-ratio: 1 / 1;
+    background-color: #fefefe;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    box-shadow:
+        inset -3px -3px 5px rgba(255, 255, 255, 0.8),
+        inset 3px 3px 5px rgba(0, 0, 0, 0.08),
+        3px 3px 6px rgba(0, 0, 0, 0.1); /* 외부 그림자 */
+    cursor: pointer;
+    transition: all .03s ease;
+    color: #cacaca;
+}
+.item:active {
+  box-shadow:
+    inset 3px 3px 5px rgba(0, 0, 0, 0.15),
+    inset -3px -3px 5px rgba(255, 255, 255, 0.6);
+  transform: translateY(1px); /* 살짝 아래로 눌림 */
+  background-color: #eaeaea;
+}
+.item:last-child{
+    background-color: #0d6efd;
+    color: #ffffff;
+    box-shadow:
+        0 3px 6px rgba(13, 110, 253, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1); /* subtle inner light */
+}
+.item:last-child:active{
+    box-shadow:
+        inset 2px 2px 4px rgba(0, 0, 0, 0.15),
+        inset -2px -2px 4px rgba(255, 255, 255, 0.05);
+    transform: translateY(1px);
+    background-color: #0b5ed7;
+}
+
+.innerwrap{max-width: 400px;}
+
+.custom-input {
+    width: 100%;
+    padding: 11px 16px;
+    font-size: 24px;
+    background-color: #fff;
+    border: 1px solid #c0c0c0;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    transition: border 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* 포커스 시 강조 */
+.custom-input:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.25),
+                0 2px 6px rgba(0, 0, 0, 0.08);
+}
+/* #studentForm .input-wrap{
     box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.1),
                 inset -3px -3px 6px rgba(200, 200, 200, 0.12);
     height: 3.5rem;
@@ -152,7 +215,7 @@ body{
 #studentForm button{
     aspect-ratio: 1 / 1;
     padding: 0.75rem;
-}
+} */
 /* #endregion student id input area */
 
 /* #region table utility classes */

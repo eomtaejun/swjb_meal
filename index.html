@@ -53,9 +53,8 @@
     </header>
 
     <div class="row flex-1">
-        <div class="col-7 h-100">
+        <!-- <div class="col-7 h-100">
             <div class="w-100 h-100 d-flex flex-column justify-content-center align-items-center row-gap-4">
-                <!-- student information -->
                 <div id="infoArea" class="area flex-1 position-relative">
                     <p class="title">학생 정보</p>
 
@@ -68,15 +67,10 @@
                     <video id="video" class="d-block rounded-3 overflow-hidden position-absolute tran"></video>
                 </div>
 
-                <!-- input student id -->
                 <div id="inputArea" class="area h-fit">
                     <p class="title">학번 입력</p>
 
                     <form id="studentForm" class="w-100 h-fit">
-                        <!-- <div class="input-group mb-0">
-                            <input type="text" id="studentId" class="form-control border-2" placeholder="학번을 입력하세요 (5자리)" aria-label="학번을 입력하세요 (5자리)" aria-describedby="button-addon2">
-                            <button type="submit" class="btn btn-outline-secondary" id="button-addon2">Submit</button>
-                        </div> -->
                         <div class="w-100 position-relative">
                             <div class="input-wrap w-100 position-relative d-flex justify-content-center align-items-center rounded-3">
                                 <input type="text" id="studentId" class="p-3 w-100 h-100 bg-transparent" placeholder="학번을 입력하세요 (5자리)" autocomplete="off">
@@ -84,6 +78,72 @@
                             </div>
                         </div>
                     </form>
+                </div>
+            </div>
+        </div> -->
+
+        <div class="col-7 h-100">
+            <div class="w-100 h-100 d-flex flex-column justify-content-between align-items-center row-gap-4">
+                <div class="w-100 h-fit d-flex justify-content-center align-items-center column-gap-4">
+                    <!-- qr -->
+                    <div class="area h-100">
+                        <p class="title">QR코드 인식</p>
+                        <video id="video" class="d-block rounded-3 overflow-hidden tran"></video>
+                    </div>
+                    <!-- numberpad -->
+                    <div class="area">
+                        <p class="title">학번 입력</p>
+                        
+                        <!-- <div class="row mb-3">
+                            <div class="col-6">
+                                <input type="text" class="custom-input" readonly>
+                            </div>
+
+                            <div class="col-6">
+                                <input type="text" class="custom-input" readonly>
+                            </div>
+                        </div> -->
+                        
+                        <div class="w-100 d-flex justify-content-center align-items-center">
+                            <div class="innerwrap d-flex flex-column justify-content-center align-items-center">
+                                <div class="mb-3 d-flex justify-content-center align-itmes-center column-gap-3">
+                                    <input type="text" id="studentId" class="custom-input fx-2" placeholder="학번 5자리">
+                                    <p class="mb-0 fx-5 text-secondary lh-lg">-</p>
+                                    <input type="text" id="studentBirth" class="custom-input fx-2" placeholder="생년월일 6자리">
+                                </div>
+    
+                                <div id="numpad" class="w-100 d-flex flex-wrap justify-content-start align-items-start gap-3">
+                                    <div class="item p-2 fw-bold fx-5" data-value="1">1</div>
+                                    <div class="item p-2 fw-bold fx-5" data-value="2">2</div>
+                                    <div class="item p-2 fw-bold fx-5" data-value="3">3</div>
+                                    <div class="item p-2 fw-bold fx-5" data-value="4">4</div>
+                                    <div class="item p-2 fw-bold fx-5" data-value="5">5</div>
+                                    <div class="item p-2 fw-bold fx-5" data-value="6">6</div>
+                                    <div class="item p-2 fw-bold fx-5" data-value="7">7</div>
+                                    <div class="item p-2 fw-bold fx-5" data-value="8">8</div>
+                                    <div class="item p-2 fw-bold fx-5" data-value="9">9</div>
+                                    <div class="item p-2 fw-bold fx-7" data-value="pop">&larr;</div>
+                                    <div class="item p-2 fw-bold fx-5" data-value="0">0</div>
+                                    <div class="item p-2 fw-semibold fx-3" data-value="enter">Enter</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- information -->
+                <div class="area flex-1">
+                    <div class="row">
+                        <div class="col-4">
+                            <p class="title">학생 정보</p>
+                        </div>
+    
+                        <div class="col-6">
+                            <p class="infoText mb-1 fx-4 fw-semibold">이름: </p>
+                            <p class="infoText mb-1 fx-4 fw-semibold">학번: </p>
+                            <p class="infoText mb-1 fx-4 fw-semibold">학과: </p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -33,6 +33,9 @@ export class QRcode{
         this.students=[];
         this.student=null;
 
+        this.inputNumber=[];
+        this.inputBirth=[];
+
         this.key="1D0uBz9EtXE0oRVAJwzqLqydJ9SilufUm5VaTFlNeurY";
         this.gids=[
             0,
@@ -137,6 +140,7 @@ export class QRcode{
                     class: datas[1],
                     number: datas[2],
                     name: datas[3],
+                    birth: datas[4]
                 })
     
                 return acc;
@@ -144,6 +148,7 @@ export class QRcode{
 
             return [...acc, ...data];
         }, []);
+        console.log(this.students)
     }
 
     load(){
@@ -154,7 +159,7 @@ export class QRcode{
         $($(".infoText")[1]).text("학번: ");
         $($(".infoText")[2]).text("학과: ");
         $(".area").css("box-shadow", "0 0.5rem 1rem rgba(0, 0, 0, 0.15)");
-        document.querySelector("#studentForm input").value="";
+        // document.querySelector("#studentForm input").value="";
         if(!this.student) return; // invalid value
         // value not included in students
         if(!this.students.find(value=>`${value.grade}${value.class.padStart(2, '0')}${value.number.padStart(2, '0')}`===`${this.student.grade}${this.student.class.padStart(2, '0')}${this.student.number.padStart(2, '0')}`)){
@@ -206,28 +211,38 @@ export class QRcode{
 
     event(){
         // validation
-        $("#studentForm input").on("input", e=>{
-            e.target.value=e.target.value.trim().replaceAll(/[^\d]/g, ""); // only number
-            if(e.target.value.length>5) e.target.value=e.target.value.slice(0, 5); // length 5 or less
-            $("#studentForm input").removeClass("border-danger"); // error border reset
-        })
+        $("#numpad").on("click", e=>{
+            const value=e.target.dataset.value;
+            console.log(value)
+            if(!value) return;
 
-        $("#studentForm").on("submit", e=>{
-            e.preventDefault();
-            if(this.student) return;
+            if(value!=="enter" && value!=="pop"){
+                if(this.inputNumber.length<5) this.inputNumber.push(Number(value));
+                else this.inputBirth.push(Number(value))
+                this.inputNumber=this.inputNumber.slice(0, 5);
+                this.inputBirth=this.inputBirth.slice(0, 6);
+            } else if(value==="pop"){
+                if(this.inputBirth.length) this.inputBirth.pop();
+                else this.inputNumber.pop();
+            } else if(value==="enter"){
+                // studentNumber => this.inputNumber
+                this.student=this.students.find(student=>`${student.grade}${student.class.padStart(2, '0')}${student.number.padStart(2, '0')}`===this.inputNumber.join("") && student.birth===this.inputBirth.join(""));
+                console.log(this.student)
 
-            const studentNumber=document.querySelector("#studentForm input").value;
+                this.inputNumber=[];
+                this.inputBirth=[];
 
-            this.student=this.students.find(value=>`${value.grade}${value.class.padStart(2, '0')}${value.number.padStart(2, '0')}`===studentNumber);
-
-            if(this.student) this.load();
-            else{
-                $("#studentForm .input-wrap").addClass("border border-danger border-2");
-                setTimeout(()=>{
-                    $("#studentForm .input-wrap").removeClass("border border-danger border-2")
-                }, 1000)
+                this.load();
             }
+
+            document.querySelector("#studentId").value=this.inputNumber.join("");
+            document.querySelector("#studentBirth").value=this.inputBirth.join("");
+
+            console.log("number", this.inputNumber)
+            console.log("birth", this.inputBirth)
         })
+
+        document.addEventListener("contextmenu", e=>e.preventDefault());
     }
 
     error(){
@@ -238,48 +253,6 @@ export class QRcode{
             $("#alert").addClass("d-none");
             $("#alert").removeClass("d-block");
         })
-    }
-}
-
-export class Input{
-    load(){
-        // validation init
-        $($(".infoText")[0]).text("이름: ");
-        $($(".infoText")[1]).text("학번: ");
-        $($(".infoText")[2]).text("학과: ");
-        $(".area").css("box-shadow", "0 0.5rem 1rem rgba(0, 0, 0, 0.15)");
-        document.querySelector("#studentForm input").value="";
-        if(!this.student) return;
-
-        // shadow
-        const gradeColorMap={
-            "1": "rgba(255, 94, 87, 0.4)",
-            "2": "rgba(255, 179, 71, 0.5)",
-            "3": "rgba(79, 195, 247, 0.5)"
-        };
-        const shadowColor=gradeColorMap[this.student.grade];
-        if (shadowColor) $(".area").css("box-shadow", `0 0 1.5rem 1rem ${shadowColor}`);
-
-        // text
-        $($(".infoText")[0]).text(`이름: ${this.student.name}`);
-        $($(".infoText")[1]).text(`학번: ${this.student.grade}${this.student.class.padStart(2, '0')}${this.student.number.padStart(2, '0')}`);
-
-        let major=null;
-        switch(Number(this.student.class)){
-            case 1:
-            case 2:
-                major="AI융합전자과"; break;
-            case 3:
-            case 4:
-                major="스마트자동화과"; break;
-            case 5:
-            case 6:
-                major="디자인콘텐츠과"; break;
-            case 7:
-            case 8:
-                major="IT소프트웨어과"; break;
-        }
-        $($(".infoText")[2]).text(`학과: ${major}`);
     }
 }
 
