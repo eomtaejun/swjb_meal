@@ -1,7 +1,7 @@
 @charset "UTF-8";
 
-/* #region reset */
-*{margin: 0; padding: 0; box-sizing: border-box; font-size: 1rem; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; user-select: none;}
+/* #region assets */
+*{margin: 0; padding: 0; box-sizing: border-box; font-size: 1rem; font-family: 'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; user-select: none;}
 a{text-decoration: none !important; display: block; color: #000;}
 a, button, label{cursor: pointer; user-select: none;}
 input, textarea, select, button{outline: none !important; border: none; font-size: 0.9rem;}
@@ -68,70 +68,88 @@ input, textarea, select, button{outline: none !important; border: none; font-siz
 .fx-4{font-size: 1.6rem !important;}
 .fx-5{font-size: 1.8rem !important;}
 .fx-6{font-size: 2rem !important;}
-.fx-7{font-size: 3rem !important;}
-.fx-8{font-size: 4rem !important;}
-.fx-9{font-size: 5rem !important;}
+.fx-7{font-size: 2.2rem !important;}
+.fx-8{font-size: 2.4rem !important;}
+.fx-9{font-size: 2.6rem !important;}
+.fx-10{font-size: 2.8rem !important;}
+.fx-11{font-size: 3rem !important;}
+.fx-12{font-size: 3.2rem !important;}
+.fx-13{font-size: 3.4rem !important;}
+.fx-14{font-size: 3.6rem !important;}
+.fx-15{font-size: 3.8rem !important;}
 
 .fx-n1{font-size: 0.95rem !important;}
 .fx-n2{font-size: 0.9rem !important;}
 .fx-n3{font-size: 0.85rem !important;}
 .fx-n4{font-size: 0.8rem !important;}
 
-.font-bold{font-weight: bold;}
-.fit-cover{object-fit: cover; width: 100%; height: 100%;}
-.nowrap{white-space: nowrap;}
-.tran{transition: all .35s ease;}
 .flex-1{flex: 1;}
+.flex-2{flex: 2;}
+.flex-3{flex: 3;}
+.flex-4{flex: 4;}
+.flex-5{flex: 5;}
+
 .w-fit{width: fit-content;}
 .h-fit{height: fit-content;}
-/* #endregion reset */
+.fit-cover{object-fit: cover; width: 100%; height: 100%;}
+.nowrap{white-space: nowrap;}
+.wordnormal{word-break: normal;}
+.wordwrap{word-break: keep-all;}
+.tran{transition: all .35s ease;}
+/* #endregion assets */
 
-/* #region section utility classes */
+/* #region utility css */
 body{
     height: 100vh;
+    padding: 1.5rem;
     background: linear-gradient(135deg, #f9f1ff, #e0f7fa);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    row-gap: 1.5rem;
+    overflow: hidden;
 }
 
 .area{
-    padding: 3rem;
+    padding: 2.5rem;
     width: 100%;
     background-color: #fff;
-    border-radius: 1rem;
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-    transition: all .35s ease;
+    border-radius: 1.3rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: box-shadow .35s ease;
 }
 
 .title{
     padding-left: 0.5rem;
     margin-bottom: 1.5rem;
-    font-size: 1.8rem;
+    border-left-width: calc((1.2625rem + 0.75vw) * 0.1389);
+    border-left-style: solid;
+    border-left-color: #0d6efd;
+    font-size: calc(1.2rem + 0.6vw);
     font-weight: bold;
-    color: #212529;
-    border-left: 4px solid #0d6efd;
 }
-/* #endregion section utility classes */
+/* #endregion utility class */
 
-/* #region information area */
-/* #video{
-    width: 50%;
-    min-width: 300px;
-    max-width: 410px;
-    object-fit: cover;
-    aspect-ratio: 1 / 1;
-    right: 3rem;
-    top: 50%;
-    transform: translateY(-50%);
-    box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175);
-} */
+/* #region information */
+.infoText:nth-of-type(1) p{
+    width: calc(100% / 3);
+    max-width: 100px;
+}
+/* #endregion information */
+
+/* #region camera */
 #video{
     width: 100%;
     aspect-ratio: 1 / 1;
     object-fit: cover;
 }
-/* #endregion information area */
 
-/* #region student id input area */
-.item{
+#selectDevice{z-index: 9999;}
+/* #endregion camera */
+
+/* #region numbpad */
+.key{
     width: calc((100% / 3) - (2rem / 3));
     aspect-ratio: 1 / 1;
     background-color: #fefefe;
@@ -140,39 +158,37 @@ body{
     justify-content: center;
     align-items: center;
     font-size: 20px;
-    box-shadow:
-        inset -3px -3px 5px rgba(255, 255, 255, 0.8),
-        inset 3px 3px 5px rgba(0, 0, 0, 0.08),
-        3px 3px 6px rgba(0, 0, 0, 0.1); /* 외부 그림자 */
+    color: #888;
     cursor: pointer;
-    transition: all .03s ease;
-    color: #cacaca;
+    transition: all .1s ease;
+
+    box-shadow: inset -2px -2px 4px rgba(255, 255, 255, 0.95), 
+                inset 2px 2px 4px rgba(0, 0, 0, 0.06), 
+                2px 2px 6px rgba(0, 0, 0, 0.08);
 }
-.item:active {
-  box-shadow:
-    inset 3px 3px 5px rgba(0, 0, 0, 0.15),
-    inset -3px -3px 5px rgba(255, 255, 255, 0.6);
-  transform: translateY(1px); /* 살짝 아래로 눌림 */
-  background-color: #eaeaea;
+.key:active{
+    background-color: #f0f0f0;
+    box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.1), 
+                inset -2px -2px 4px rgba(255, 255, 255, 0.75);
+    transform: translateY(1px);
 }
-.item:last-child{
+
+.key:last-child{
     background-color: #0d6efd;
     color: #ffffff;
-    box-shadow:
-        0 3px 6px rgba(13, 110, 253, 0.2),
-        inset 0 1px 0 rgba(255, 255, 255, 0.1); /* subtle inner light */
+    box-shadow: 0 3px 6px rgba(13, 110, 253, 0.28),
+                inset 0 1px 0 rgba(255, 255, 255, 0.18);
 }
-.item:last-child:active{
-    box-shadow:
-        inset 2px 2px 4px rgba(0, 0, 0, 0.15),
-        inset -2px -2px 4px rgba(255, 255, 255, 0.05);
+.key:last-child:active{
+    background-color: #0955d9;
+    box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.18),
+                inset -2px -2px 4px rgba(255, 255, 255, 0.06);
     transform: translateY(1px);
-    background-color: #0b5ed7;
 }
+/* #endregion numpad */
 
-.innerwrap{max-width: 400px;}
-
-.custom-input {
+/* #region numpad */
+.custom-input{
     width: 100%;
     padding: 11px 16px;
     font-size: 24px;
@@ -180,95 +196,70 @@ body{
     border: 1px solid #c0c0c0;
     border-radius: 8px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-    transition: border 0.2s ease, box-shadow 0.2s ease;
+    transition: border .2s ease, box-shadow .2s ease;
 }
 
-/* 포커스 시 강조 */
-.custom-input:focus {
+.custom-input.focus{
     border-color: #0d6efd;
     box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.25),
                 0 2px 6px rgba(0, 0, 0, 0.08);
 }
-/* #studentForm .input-wrap{
-    box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.1),
-                inset -3px -3px 6px rgba(200, 200, 200, 0.12);
-    height: 3.5rem;
+
+.group label{
+    left: 5%;
+    top: 0;
+    transform: translateY(-50%);
+    color: #888;
+    background: #fff;
+    cursor: default;
 }
-#studentForm .input-wrap::after{
-    content: "";
+/* #endregion numpad */
+
+/* #region meal list */
+.badge{
+    color: #636363;
+    border: 1px solid #d2d2d2;
+    background-color: #f5f6f7;
+    padding: 0.5rem 0.75rem;
+}
+/* #endregion meal list */
+
+/* #region error alert */
+#errorAlert{
+    min-width: 700px;
+    width: 25%;
+    max-width: 1000px;
+    opacity: 0;
+    transform: translate(-50%, -40%);
+    transition: all .25s ease;
+    z-index: 99;
+}
+#errorAlert.show{
+    box-shadow: 0 0 0.5rem 0.3rem rgba(132, 32, 41, 0.5);
+    opacity: 1;
+    transform: translate(-50%, -50%);
+}
+/* #endregion error alert */
+
+/* #region camera not found error alert */
+#cameraAlert{z-index: 999;}
+
+#cameraAlert p{
+  color: #222;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+/* #endregion camera not found error alert */
+
+/* #region grade */
+#entry span{color: #0d6efd;}
+
+#time{
     position: absolute;
-    z-index: 1;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    height: 2.5px;
-    width: 0;
-    border-radius: 1.5px;
-    background-color: #0d6efd;
-    mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
-    transition: all .35s ease;
+    right: 2.5rem;
+    top: 2.5rem;
+    background-color: #fefefe;
+    box-shadow: inset -2px -2px 4px rgba(255, 255, 255, 0.95), 
+                inset 2px 2px 4px rgba(0, 0, 0, 0.06), 
+                2px 2px 6px rgba(0, 0, 0, 0.08);    
 }
-#studentForm .input-wrap:focus-within::after{width: 100%;}
-
-#studentForm input{height: 100%;}
-
-#studentForm button{
-    aspect-ratio: 1 / 1;
-    padding: 0.75rem;
-} */
-/* #endregion student id input area */
-
-/* #region table utility classes */
-.lunchMenu th+th,
-.orderGrade th+th{border-left: 1px solid #a6b5cc;}
-.lunchMenu td+td,
-.orderGrade td+td{border-left: 1px solid #dee2e6;}
-
-.orderMonth,
-.lunchMenu{table-layout: fixed;}
-
-.lunchMenu .thead,
-.lunchMenu .tbody{flex-shrink: 0;}
-
-.lunchMenu thead tr th:first-child,
-.lunchMenu tbody tr td:first-child{mask-image: linear-gradient(to left, #000, transparent);}
-.lunchMenu thead tr th:last-child,
-.lunchMenu tbody tr td:last-child{mask-image: linear-gradient(to right, #000, transparent);}
-
-.lunchMenu thead th:nth-child(2),
-.lunchMenu tbody td:nth-child(2){width: 45%;}
-
-.lunchMenu tbody tr td p:nth-of-type(even){color: #4f4f4f;}
-/* #endregion table utility classes */
-
-/* #region by month order table */
-.orderMonth .thead{
-    background-color: #cfe2ff;
-    border-bottom: 1px solid #a6b5cc;;
-}
-.orderMonth .thead div+div{border-left: 1px solid #a6b5cc;}
-
-.orderMonth .tbody>div:nth-of-type(even){background-color: rgba(0, 0, 0, 0.05);}
-.orderMonth .tbody>div>div{border-bottom: 1px solid #dee2e6;}
-.orderMonth .tbody>div+div{border-left: 1px solid #dee2e6;}
-
-.orderMonth .thead>div:nth-of-type(2),
-.orderMonth .thead>div:nth-of-type(4),
-.orderMonth .tbody>div:nth-of-type(2),
-.orderMonth .tbody>div:nth-of-type(4){opacity: 0.7;}
-/* #endregion by month order table */
-
-/* #region can not found camera message */
-#alert{z-index: 9999;}
-
-#alert p{
-    color: #222;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-}
-/* #endregion can not found camera message */
-
-/* #region select cam */
-#selectDevice{
-    z-index: 999;
-}
-/* #endregion select cam */
+/* #endregion grade */

@@ -1,17 +1,17 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <script src="./common/js/jquery-3.7.1.min.js"></script>
-    <script src="./common/bootstrap-5.3.7-dist/js/bootstrap.js"></script>
-    <!-- <script src="https://cdn.tailwindcss.com"></script> -->
+    <script src="./assets/jquery-3.7.1.min.js"></script>
+    <script src="./assets/bootstrap-5.3.7-dist/js/bootstrap.js"></script>
     <script type="module" src="./common/js/script.js"></script>
-    <link rel="stylesheet" href="./common/bootstrap-5.3.7-dist/css/bootstrap.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./assets/bootstrap-5.3.7-dist/css/bootstrap.css">
     <link rel="stylesheet" href="./common/css/style.css">
 </head>
-<body class="p-5 d-flex flex-column justify-content-center align-items-center row-gap-4 overflow-hidden">
+<body oncontextmenu="return false;">
     <!-- #region camera not found error message -->
     <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
         <symbol id="x-circle-fill" fill="currentColor" viewBox="0 0 16 16">
@@ -22,7 +22,7 @@
         </symbol>
     </svg>
 
-    <div id="alert" class="p-4 bg-white border-start border-5 border-primary rounded-3 shadow-lg d-flex justify-content-center align-items-center column-gap-3 position-absolute top-50 start-50 translate-middle d-none">
+    <div id="cameraAlert" class="p-4 bg-white border-start border-5 border-primary rounded-3 shadow-lg d-flex justify-content-center align-items-center column-gap-3 position-absolute top-50 start-50 translate-middle d-none">
         <svg class="my-3 ml-4 flex-shrink-0 text-primary" width="32" height="32"><use xlink:href="#x-circle-fill"/></svg>
         <div class="my-3 mr-3 d-flex flex-column justify-content-center align-items-start">
             <p class="mb-0 fx-4 fw-semibold">카메라를 찾을 수 없습니다</p>
@@ -35,7 +35,7 @@
     <!-- #region camera select -->
     <div id="selectDevice" class="p-4 w-25 bg-white border-start border-5 border-primary rounded-3 shadow-lg d-flex justify-content-between align-items-center column-gap-3 position-absolute top-50 start-50 translate-middle d-none">
         <div class="w-75">
-            <p class="title fx-2">카메라 설정</p>
+            <p class="title">카메라 설정</p>
     
             <select class="form-select"></select>
         </div>
@@ -44,211 +44,117 @@
     </div>
     <!-- #endregion camera select -->
 
-    <!-- header -->
-    <header class="area px-5 py-3">
-        <div class="w-100 h-100 d-flex justify-content-between align-items-center">
-            <img src="./common/images/logo.png" alt="Suwon Information Science High School">
-            <p class="date mb-0 fx-2 text-secondary fw-semibold"></p>
+    
+    <!-- #region error alert -->
+    <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
+        <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+        </symbol>
+    </svg>
+
+    <div id="errorAlert" class="mb-0 p-5 text-center alert alert-danger d-flex justify-content-center align-items-center column-gap-3 position-absolute start-50 top-50">
+        <svg class="bi flex-shrink-0" width="2rem" height="2rem"><use xlink:href="#exclamation-triangle-fill"/></svg>
+        <p class="mb-0 fx-4 fw-semibold"></p>
+    </div>
+    <!-- #endregion error alert -->
+
+    <header class="area py-4 d-flex justify-content-between align-items-center">
+        <div class="w-fit">
+            <img src="./common/images/logo.png" alt="suwon information scince high school" class="d-block">
         </div>
+
+        <p class="mb-0 fx-3 text-muted fw-bold"></p>
     </header>
 
-    <div class="row flex-1">
-        <!-- <div class="col-7 h-100">
-            <div class="w-100 h-100 d-flex flex-column justify-content-center align-items-center row-gap-4">
-                <div id="infoArea" class="area flex-1 position-relative">
-                    <p class="title">학생 정보</p>
+    <div class="w-100 flex-1">
+        <div class="w-100 h-100 d-flex flex-column row-gap-4">
+            <div class="row h-fit">
+                <div class="col-5">
+                    <div class="d-flex flex-column row-gap-4 h-100">
+                        <div class="area h-100">
+                            <p class="title">학생 정보</p>
 
-                    <div class="py-2">
-                        <p class="infoText mb-1 fx-5 fw-semibold">이름: </p>
-                        <p class="infoText mb-1 fx-5 fw-semibold">학번: </p>
-                        <p class="infoText mb-1 fx-5 fw-semibold">학과: </p>
-                    </div>
-                    
-                    <video id="video" class="d-block rounded-3 overflow-hidden position-absolute tran"></video>
-                </div>
+                            <div class="d-flex flex-column justify-content-start align-items-start row-gap-5">
+                                <div class="infoText ml-5 w-100 d-flex column-gap-1">
+                                    <p class="mb-0 fx-8 text-muted fw-semibold text-end">학년</p>
+                                    <p class="mb-0 fx-8 text-muted fw-semibold text-end">반</p>
+                                    <p class="mb-0 fx-8 text-muted fw-semibold text-end">번</p>
+                                </div>
 
-                <div id="inputArea" class="area h-fit">
-                    <p class="title">학번 입력</p>
+                                <div>
+                                    <p class="mb-1 fx-6 fw-semibold text-muted">이름</p>
+                                    <p class="infoText ml-5 mb-0 fx-15 fw-bold lh-sm"></p>
+                                </div>
 
-                    <form id="studentForm" class="w-100 h-fit">
-                        <div class="w-100 position-relative">
-                            <div class="input-wrap w-100 position-relative d-flex justify-content-center align-items-center rounded-3">
-                                <input type="text" id="studentId" class="p-3 w-100 h-100 bg-transparent" placeholder="학번을 입력하세요 (5자리)" autocomplete="off">
-                                <button type="submit" class="h-100 d-flex justify-content-center align-items-center bg-transparent"><svg class="text-primary w-100 h-100"><use xlink:href="#arrow-right-square-fill"/></svg></button>
+                                <div>
+                                    <p class="mb-1 fx-6 fw-semibold text-muted">학과</p>
+                                    <p class="infoText ml-5 mb-0 fx-10 fw-bold lh-sm"></p>
+                                </div>
                             </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div> -->
 
-        <div class="col-7 h-100">
-            <div class="w-100 h-100 d-flex flex-column justify-content-between align-items-center row-gap-4">
-                <div class="w-100 h-fit d-flex justify-content-center align-items-center column-gap-4">
-                    <!-- qr -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col">
                     <div class="area h-100">
                         <p class="title">QR코드 인식</p>
-                        <video id="video" class="d-block rounded-3 overflow-hidden tran"></video>
-                    </div>
-                    <!-- numberpad -->
-                    <div class="area">
-                        <p class="title">학번 입력</p>
-                        
-                        <!-- <div class="row mb-3">
-                            <div class="col-6">
-                                <input type="text" class="custom-input" readonly>
-                            </div>
 
-                            <div class="col-6">
-                                <input type="text" class="custom-input" readonly>
-                            </div>
-                        </div> -->
-                        
-                        <div class="w-100 d-flex justify-content-center align-items-center">
-                            <div class="innerwrap d-flex flex-column justify-content-center align-items-center">
-                                <div class="mb-3 d-flex justify-content-center align-itmes-center column-gap-3">
-                                    <input type="text" id="studentId" class="custom-input fx-2" placeholder="학번 5자리">
-                                    <p class="mb-0 fx-5 text-secondary lh-lg">-</p>
-                                    <input type="text" id="studentBirth" class="custom-input fx-2" placeholder="생년월일 6자리">
-                                </div>
-    
-                                <div id="numpad" class="w-100 d-flex flex-wrap justify-content-start align-items-start gap-3">
-                                    <div class="item p-2 fw-bold fx-5" data-value="1">1</div>
-                                    <div class="item p-2 fw-bold fx-5" data-value="2">2</div>
-                                    <div class="item p-2 fw-bold fx-5" data-value="3">3</div>
-                                    <div class="item p-2 fw-bold fx-5" data-value="4">4</div>
-                                    <div class="item p-2 fw-bold fx-5" data-value="5">5</div>
-                                    <div class="item p-2 fw-bold fx-5" data-value="6">6</div>
-                                    <div class="item p-2 fw-bold fx-5" data-value="7">7</div>
-                                    <div class="item p-2 fw-bold fx-5" data-value="8">8</div>
-                                    <div class="item p-2 fw-bold fx-5" data-value="9">9</div>
-                                    <div class="item p-2 fw-bold fx-7" data-value="pop">&larr;</div>
-                                    <div class="item p-2 fw-bold fx-5" data-value="0">0</div>
-                                    <div class="item p-2 fw-semibold fx-3" data-value="enter">Enter</div>
-                                </div>
-                            </div>
-                        </div>
+                        <video id="video" class="rounded-3 overflow-hidden tran"></video>
                     </div>
                 </div>
 
-                <!-- information -->
-                <div class="area flex-1">
-                    <div class="row">
-                        <div class="col-4">
-                            <p class="title">학생 정보</p>
+                <div class="col">
+                    <div class="area h-100">
+                        <div class="mb-3 d-flex justify-content-center align-items-center column-gap-3">
+                            <div class="group position-relative">
+                                <label for="studentId" class="px-1 fx-2 position-absolute">학번 5자리</label>
+                                <input type="text" id="studentId" class="custom-input fx-4" disabled>
+                            </div>
+                            
+                            <div class="group position-relative">
+                                <label for="studentBirth" class="px-1 fx-2 position-absolute">생년월일 6자리</label>
+                                <input type="text" id="studentBirth" class="custom-input fx-4" disabled>
+                            </div>
                         </div>
-    
-                        <div class="col-6">
-                            <p class="infoText mb-1 fx-4 fw-semibold">이름: </p>
-                            <p class="infoText mb-1 fx-4 fw-semibold">학번: </p>
-                            <p class="infoText mb-1 fx-4 fw-semibold">학과: </p>
+
+                        <div class="w-100 d-flex justify-content-center">
+                            <div class="w-75">
+                                <div id="numpad" class="h-100 d-flex flex-wrap justify-content-center align-items-start gap-3">
+                                    <div class="key p-2 fx-5 fw-bold" data-value="1">1</div>
+                                    <div class="key p-2 fx-5 fw-bold" data-value="2">2</div>
+                                    <div class="key p-2 fx-5 fw-bold" data-value="3">3</div>
+                                    <div class="key p-2 fx-5 fw-bold" data-value="4">4</div>
+                                    <div class="key p-2 fx-5 fw-bold" data-value="5">5</div>
+                                    <div class="key p-2 fx-5 fw-bold" data-value="6">6</div>
+                                    <div class="key p-2 fx-5 fw-bold" data-value="7">7</div>
+                                    <div class="key p-2 fx-5 fw-bold" data-value="8">8</div>
+                                    <div class="key p-2 fx-5 fw-bold" data-value="9">9</div>
+                                    <div class="key p-2 fx-7 fw-bold" data-value="pop">&larr;</div>
+                                    <div class="key p-2 fx-5 fw-bold" data-value="0">0</div>
+                                    <div class="key p-2 fx-3 fw-semibold" data-value="enter">Enter</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        
-        <div class="col-5 h-100">
-            <div class="w-100 h-100 d-flex flex-column justify-content-between align-items-center row-gap-4">
-                <!-- meal table -->
-                <div id="mealArea" class="area flex-1">
-                    <div class="w-100 h-100 d-flex justify-content-center align-items-start">
-                        <div>
-                            <p class="title">오늘의 급식</p>
-                            
-                            <table class="lunchMenu table mb-0">
-                                <thead>
-                                    <tr class="table-primary">
-                                        <th scope="col" class="fx-2 fw-semibold text-center">date</th>
-                                        <th scope="col" class="fx-2 fw-semibold text-center">date</th>
-                                        <th scope="col" class="fx-2 fw-semibold text-center">date</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td class="fx-1 text-center lh-base nowrap">(없음)</td>
-                                        <td class="fx-1 text-center lh-base nowrap">(없음)</td>
-                                        <td class="fx-1 text-center lh-base nowrap">(없음)</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+
+            <div class="row flex-1">
+                <div class="col-7">
+                    <div class="area h-100">
+                        <p class="title">오늘의 급식</p>
+
+                        <div id="meal" class="d-flex flex-wrap column-gap-2 row-gap-3"></div>
                     </div>
                 </div>
 
-                <!-- order area -->
-                <div id="orderArea" class="area h-fit">
-                    <div class="w-100 h-100 d-flex justify-content-center align-items-center">
-                        <div class="row w-100 h-fit">
-                            <!-- by grade -->
-                            <div class="col-6">
-                                <p class="title fx-4">학년별 입장 시간</p>
-            
-                                <table class="orderGrade table table-striped mb-0">
-                                    <thead>
-                                        <tr class="table-primary">
-                                            <th scope="col" class="fx-1 fw-semibold text-center">학년</th>
-                                            <th scope="col" class="fx-1 fw-semibold text-center">입장 시간</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td class="fx-n2 text-center lh-base">3학년</td>
-                                            <td class="fx-n2 text-center lh-base">13:00</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="fx-n2 text-center lh-base">2학년</td>
-                                            <td class="fx-n2 text-center lh-base">13:06</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="fx-n2 text-center lh-base">1학년</td>
-                                            <td class="fx-n2 text-center lh-base">13:10</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-    
-                            <!-- by month -->
-                            <div class="col-6">
-                                <p class="title fx-4">월별 입장 순서</p>
-    
-                                <div class="orderMonth">
-                                    <div class="thead w-100 d-flex justify-content-center align-items-center">
-                                        <div class="p-2 flex-1 fx-1 fw-bold text-center">#</div>
-                                        <div class="p-2 flex-1 fx-1 fw-bold text-center">0월</div>
-                                        <div class="p-2 flex-1 fx-1 fw-bold text-center">0월</div>
-                                        <div class="p-2 flex-1 fx-1 fw-bold text-center">0월</div>
-                                    </div>
-    
-                                    <div class="tbody w-100 d-flex justify-content-center">
-                                        <div class="d-flex flex-column flex-1">
-                                            <div class="p-2 flex-1 fx-n2 text-center fw-semibold">1순위</div>
-                                            <div class="p-2 flex-1 fx-n2 text-center fw-semibold">2순위</div>
-                                            <div class="p-2 flex-1 fx-n2 text-center fw-semibold">3순위</div>
-                                            <div class="p-2 flex-1 fx-n2 text-center fw-semibold">4순위</div>
-                                        </div>
-                                        <div class="d-flex flex-column flex-1">
-                                            <div class="p-2 flex-1 fx-n2 text-center"><!-- 전자 --></div>
-                                            <div class="p-2 flex-1 fx-n2 text-center"><!-- 자동화 --></div>
-                                            <div class="p-2 flex-1 fx-n2 text-center"><!-- 디자인 --></div>
-                                            <div class="p-2 flex-1 fx-n2 text-center"><!-- 소프트 --></div>
-                                        </div>
-                                        <div class="d-flex flex-column flex-1">
-                                            <div class="p-2 flex-1 fx-n2 text-center"><!-- 자동화 --></div>
-                                            <div class="p-2 flex-1 fx-n2 text-center"><!-- 디자인 --></div>
-                                            <div class="p-2 flex-1 fx-n2 text-center"><!-- 소프트 --></div>
-                                            <div class="p-2 flex-1 fx-n2 text-center"><!-- 전자 --></div>
-                                        </div>
-                                        <div class="d-flex flex-column flex-1">
-                                            <div class="p-2 flex-1 fx-n2 text-center"><!-- 디자인 --></div>
-                                            <div class="p-2 flex-1 fx-n2 text-center"><!-- 소프트 --></div>
-                                            <div class="p-2 flex-1 fx-n2 text-center"><!-- 전자 --></div>
-                                            <div class="p-2 flex-1 fx-n2 text-center"><!-- 자동화 --></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                <div class="col-5">
+                    <div class="area h-100 position-relative">
+                        <p class="title">입장 가능 학년</p>
+
+                        <p id="time" class="mb-2 fx-8 fw-bold rounded-3 shadow-sm w-fit px-3"></p>
+                        <p id="entry" class="mb-0 fx-6 fw-semibold wordnormal"></p>
                     </div>
                 </div>
             </div>
@@ -256,10 +162,12 @@
     </div>
 
     <script type="module">
-        import {QRcode, Meal, DateUtils} from './common/js/script.js';
+        import {QRcode, Students, StudentNumber, Meal, DateUtils} from "./common/js/script.js";
+        var students=new Students();
         var qrcode=new QRcode();
+        var studentNumber=new StudentNumber();
         var meal=new Meal();
-        var dateutils=new DateUtils();
+        var dateUtils=new DateUtils();
     </script>
 </body>
 </html>
